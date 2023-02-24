@@ -12,11 +12,11 @@ const getUserByEmail = ({ email }) => {
     });
 };
 
-const getUserById = ({ userid }) => {
+const getUserById = ({ id }) => {
     return new Promise((resolve, reject) => {
         db("users")
             .select("*")
-            .where({ userid })
+            .where({ id })
             .then((rows) => resolve(rows[0]))
             .catch((error) => reject(error));
     });
@@ -37,4 +37,31 @@ const createUser = ({ name, email, password }) => {
     });
 };
 
-module.exports = { getUserByEmail, getUserById, createUser };
+const updateUserScore = ({ ids }) => {
+    return new Promise((resolve, reject) => {
+        db("users")
+            .increment("score", 10)
+            .whereIn("id", ids)
+            .then(() => resolve(user))
+            .catch((error) => reject(error));
+    });
+};
+
+const getUsersLeaderBoard = () => {
+    return new Promise((resolve, reject) => {
+        db("users")
+            .select("*")
+            .orderBy("score", "desc")
+            .limit(3, { skipBinding: true })
+            .then(() => resolve(user))
+            .catch((error) => reject(error));
+    });
+};
+
+module.exports = {
+    getUserByEmail,
+    getUserById,
+    createUser,
+    updateUserScore,
+    getUsersLeaderBoard,
+};

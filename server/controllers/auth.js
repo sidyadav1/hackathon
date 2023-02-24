@@ -27,11 +27,14 @@ const registration = async (req, res) => {
         }
 
         const newUser = await createUser({ name, email, password });
-        const token = await generateToken({ payload: newUser });
+        const payload = { id: newUser.id };
+        const token = await generateToken({ payload });
         return res.status(200).json({
             success: true,
-            user: newUser,
-            token,
+            data: {
+                user: newUser,
+                token,
+            },
         });
     } catch (error) {
         return res.status(500).json({
@@ -71,11 +74,14 @@ const login = async (req, res) => {
             });
         }
 
-        const token = await generateToken({ payload: user });
+        const payload = { id: user.id };
+        const token = await generateToken({ payload });
         return res.status(200).json({
             success: true,
-            user,
-            token,
+            data: {
+                user,
+                token,
+            },
         });
     } catch (error) {
         return res.status(500).json({
